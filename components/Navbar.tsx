@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const Navbar = () => {
   return (
-    <header className="w-full py-5! px-5! sm:px-10! flex justify-center items-center">
+    <header className="w-full py-5 px-5 sm:px-10 flex justify-center items-center">
       <nav className="flex w-full screen-max-width">
         <Image src={appleImg} alt="Apple" width={14} height={18} />
 
