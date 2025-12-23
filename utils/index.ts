@@ -2,6 +2,16 @@ import hero from "@/public/assets/images/hero.jpeg";
 
 export const heroImg = hero;
 
+// Videos as public paths (not imports)
+export const heroVideo = "/assets/videos/hero.mp4";
+export const smallHeroVideo = "/assets/videos/smallHero.mp4";
+export const highlightFirstVideo = "/assets/videos/highlight-first.mp4";
+export const highlightSecondVideo = "/assets/videos/hightlight-third.mp4";
+export const highlightThirdVideo = "/assets/videos/hightlight-sec.mp4";
+export const highlightFourthVideo = "/assets/videos/hightlight-fourth.mp4";
+export const exploreVideo = "/assets/videos/explore.mp4";
+export const frameVideo = "/assets/videos/frame.mp4";
+
 import apple from "@/public/assets/images/apple.svg";
 import search from "@/public/assets/images/search.svg";
 import bag from "@/public/assets/images/bag.svg";
