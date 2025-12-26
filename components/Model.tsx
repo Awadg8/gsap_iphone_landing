@@ -8,18 +8,24 @@ import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
 import { View } from "@react-three/drei";
 import { models, sizes } from "@/contants";
+import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
+import { StaticImageData } from "next/image";
 
 const Model = () => {
   const [size, setSize] = useState("small");
-  const [model, setModel] = useState({
+  const [model, setModel] = useState<{
+    title: string;
+    color: string[];
+    img: StaticImageData;
+  }>({
     title: "iPhone 15 Pro in Natural Titanium",
     color: ["#8F8A81", "#FFE789", "6F6C64"],
     img: yellowImg,
   });
 
   // camera control for the model view
-  const cameraControlSmall = useRef();
-  const cameraControlLarge = useRef();
+  const cameraControlSmall = useRef<OrbitControlsImpl>(null);
+  const cameraControlLarge = useRef<OrbitControlsImpl>(null);
 
   // model
   const small = useRef(new THREE.Group());
@@ -29,11 +35,22 @@ const Model = () => {
   const [smallRotation, setSmallRotation] = useState(0);
   const [largeRotation, setLargeRotation] = useState(0);
 
+  // Get root element for Canvas eventSource (client-side only)
+  const [eventSource, setEventSource] = useState<HTMLElement | undefined>(
+    undefined
+  );
+
   useGSAP(() => {
     gsap.to("#heading", {
       y: 0,
       opacity: 1,
     });
+
+    // Set event source after component mounts (client-side)
+    const rootElement = document.getElementById("root");
+    if (rootElement) {
+      setEventSource(rootElement);
+    }
   }, []);
 
   return (
@@ -49,7 +66,7 @@ const Model = () => {
               index={1}
               groupRef={small}
               gsapType="view1"
-              contolRef={cameraControlSmall}
+              controlRef={cameraControlSmall}
               setRotationState={setSmallRotation}
               item={model}
               size={size}
@@ -59,7 +76,7 @@ const Model = () => {
               index={2}
               groupRef={large}
               gsapType="view1"
-              contolRef={cameraControlLarge}
+              controlRef={cameraControlLarge}
               setRotationState={setLargeRotation}
               item={model}
               size={size}
@@ -75,7 +92,7 @@ const Model = () => {
                 right: 0,
                 overflow: "hidden",
               }}
-              eventSource={document.getElementById("root")}
+              eventSource={eventSource}
             >
               <View.Port />
             </Canvas>
