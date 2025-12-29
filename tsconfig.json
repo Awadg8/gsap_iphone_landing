@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "components/ModelView.jsx", "components/Model.jsx", "components/IPhone.jsx"  ],
   "exclude": ["node_modules"]
 }

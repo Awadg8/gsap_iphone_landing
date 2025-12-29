@@ -1,15 +1,11 @@
-import {
-  Html,
-  OrbitControls,
-  PerspectiveCamera,
-  View,
-} from "@react-three/drei";
+import { OrbitControls, PerspectiveCamera, View } from "@react-three/drei";
 import * as THREE from "three";
 import Lights from "./Light";
 import { Suspense } from "react";
 import IPhone from "@/components/IPhone";
 import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { StaticImageData } from "next/image";
+import Loader from "./Loader";
 
 type ModelViewProps = {
   index: number;
@@ -38,7 +34,7 @@ const ModelView = ({
     <View
       index={index}
       id={gsapType}
-      className={`w-full h-full ${index === 2 ? "-right-full" : ""} `}
+      className={`w-full h-full absolute ${index === 2 ? "-right-full" : ""}`}
     >
       {/* Ambient Light */}
       <ambientLight intensity={0.3} />
@@ -65,13 +61,7 @@ const ModelView = ({
         name={index === 1 ? "small" : "large"}
         position={[0, 0, 0]}
       >
-        <Suspense
-          fallback={
-            <Html>
-              <div>Loading ...</div>
-            </Html>
-          }
-        >
+        <Suspense fallback={<Loader />}>
           <IPhone
             scale={index === 1 ? [15, 15, 15] : [17, 17, 17]}
             item={item}

@@ -2,7 +2,7 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ModelView from "./ModelView";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { yellowImg } from "@/utils";
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
@@ -10,6 +10,7 @@ import { View } from "@react-three/drei";
 import { models, sizes } from "@/contants";
 import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { StaticImageData } from "next/image";
+import { animateWithGsapTimeline } from "@/utils/animation";
 
 const Model = () => {
   const [size, setSize] = useState("small");
@@ -30,27 +31,35 @@ const Model = () => {
   // model
   const small = useRef(new THREE.Group());
   const large = useRef(new THREE.Group());
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // rotation
   const [smallRotation, setSmallRotation] = useState(0);
   const [largeRotation, setLargeRotation] = useState(0);
 
-  // Get root element for Canvas eventSource (client-side only)
-  const [eventSource, setEventSource] = useState<HTMLElement | undefined>(
-    undefined
-  );
+  const tl = gsap.timeline();
+
+  useEffect(() => {
+    if (size === "large") {
+      animateWithGsapTimeline(tl, small, smallRotation, "#view1", "#view2", {
+        transform: "translateX(-100%)",
+        duration: 2,
+      });
+    }
+
+    if (size === "small") {
+      animateWithGsapTimeline(tl, large, largeRotation, "#view2", "#view1", {
+        transform: "translateX(0)",
+        duration: 2,
+      });
+    }
+  }, [size]);
 
   useGSAP(() => {
     gsap.to("#heading", {
       y: 0,
       opacity: 1,
     });
-
-    // Set event source after component mounts (client-side)
-    const rootElement = document.getElementById("root");
-    if (rootElement) {
-      setEventSource(rootElement);
-    }
   }, []);
 
   return (
@@ -62,6 +71,20 @@ const Model = () => {
 
         <div className="flex flex-col items-center mt-5">
           <div className="w-full h-[75vh] md:h-[90vh] overflow-hidden relative">
+            <Canvas
+              className="w-full h-full"
+              style={{
+                position: "fixed",
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                overflow: "hidden",
+              }}
+            >
+              <View.Port />
+            </Canvas>
+
             <ModelView
               index={1}
               groupRef={small}
@@ -75,27 +98,12 @@ const Model = () => {
             <ModelView
               index={2}
               groupRef={large}
-              gsapType="view1"
+              gsapType="view2"
               controlRef={cameraControlLarge}
               setRotationState={setLargeRotation}
               item={model}
               size={size}
             />
-
-            <Canvas
-              className="w-full h-full"
-              style={{
-                position: "fixed",
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                overflow: "hidden",
-              }}
-              eventSource={eventSource}
-            >
-              <View.Port />
-            </Canvas>
           </div>
 
           <div className="mx-auto w-full">
