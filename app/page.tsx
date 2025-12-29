@@ -1,3 +1,4 @@
+import Chip from "@/components/Chip";
 import Features from "@/components/Features";
 import Hero from "@/components/Hero";
 import Highlights from "@/components/Highlights";
@@ -12,6 +13,7 @@ export default function Home() {
       <Highlights />
       <Model />
       <Features />
+      <Chip />
     </main>
   );
 }
